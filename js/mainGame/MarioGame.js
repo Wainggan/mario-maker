@@ -652,8 +652,20 @@ function MarioGame() {
 
   //controlling mario with key events
   this.updateMario = function() {
+    var accel = 1;
+    var deccel = 1;
+    
     var friction = 0.9;
     var gravity = 0.2;
+    var holdgravity = 0.1;
+    
+    var mydir = 0;
+    
+    var key_right = keys[39];
+    var key_left = keys[37];
+    
+    mydir = key_right - key_left;
+        
 
     mario.checkMarioType();
 
@@ -676,50 +688,36 @@ function MarioGame() {
       }
     }
 
-    if (keys[39]) {
-      //right arrow
-      that.checkMarioPos(); //if mario goes to the center of the screen, sidescroll the map
-
-      if (mario.velX < mario.speed) {
-        mario.velX++;
+    
+    if (mydir != 0) {
+      if (mario.grounded) {
+        mario.velX += accel;
+      } else {
+        mario.velX += accel;
       }
-
-      //mario sprite position
       if (!mario.jumping) {
         tickCounter += 1;
 
         if (tickCounter > maxTick / mario.speed) {
           tickCounter = 0;
-
-          if (mario.frame != 1) {
-            mario.frame = 1;
+          
+          if (mydir = -1) {
+            if (mario.frame != 9) {
+              mario.frame = 9;
+            } else {
+              mario.frame = 8;
+            }
           } else {
-            mario.frame = 0;
+            if (mario.frame != 1) {
+             mario.frame = 1;
+            } else {
+             mario.frame = 0;
+            }
           }
         }
       }
-    }
-
-    if (keys[37]) {
-      //left arrow
-      if (mario.velX > -mario.speed) {
-        mario.velX--;
-      }
-
-      //mario sprite position
-      if (!mario.jumping) {
-        tickCounter += 1;
-
-        if (tickCounter > maxTick / mario.speed) {
-          tickCounter = 0;
-
-          if (mario.frame != 9) {
-            mario.frame = 9;
-          } else {
-            mario.frame = 8;
-          }
-        }
-      }
+    } else {
+      mario.velX *= friction;
     }
 
     if (keys[16]) {
